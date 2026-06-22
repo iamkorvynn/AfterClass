@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: campuspulse-api
+    runtime: node
+    buildCommand: pnpm install && pnpm run build
+    startCommand: pnpm --filter @workspace/api-server start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ANON_SECRET_SALT
+        generateValue: true

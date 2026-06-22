@@ -1,0 +1,571 @@
+# CampusPulse — Complete Product & Engineering Master Prompt
+
+## Role
+
+You are a Senior Software Architect, Product Designer, Security Engineer, and Mobile App Lead.
+
+Your task is to design the complete architecture, database, APIs, security model, backend logic, and mobile application structure for a college-exclusive social platform called **CampusPulse**.
+
+The system must be production-ready, scalable, secure, and designed for thousands of concurrent users.
+
+---
+
+# Product Vision
+
+CampusPulse is a hybrid college communication platform that combines:
+
+* Verified student networking
+* College communities
+* Study groups
+* Direct messaging
+* Event discovery
+* Anonymous confessions
+* Anonymous discussion boards
+* Blind chat matching
+
+The platform has two completely separate identities:
+
+### Verified Identity
+
+Used for:
+
+* Profile
+* Networking
+* Study groups
+* Public posts
+* Direct messages
+* Clubs and communities
+
+### Anonymous Identity
+
+Used for:
+
+* Confessions
+* Anonymous discussions
+* Blind chat
+* Anonymous comments
+
+No ordinary user, administrator, database leak, or API response should be capable of connecting anonymous activity to a student's real identity.
+
+---
+
+# User Verification System
+
+## Authentication
+
+Use:
+
+* College email verification
+* Magic Link authentication
+* OAuth2 support
+* JWT access tokens
+* Refresh tokens
+
+Only approved college domains can register.
+
+Example:
+
+* [student@college.edu](mailto:student@college.edu)
+* [abc@university.ac.in](mailto:abc@university.ac.in)
+
+After verification:
+
+* Create verified profile
+* Generate anonymous identity token
+* Store mappings securely
+
+---
+
+# Core Features
+
+## 1. Student Profiles
+
+Fields:
+
+* Full Name
+* Profile Picture
+* Major
+* Department
+* Graduation Year
+* Bio
+* Interests
+* Social Links (optional)
+
+Features:
+
+* Search students
+* Connect with students
+* Follow users
+* Create study groups
+
+---
+
+## 2. Campus Feed
+
+Students can:
+
+* Post updates
+* Share resources
+* Upload images
+* Like posts
+* Comment
+* Repost content
+
+Visibility:
+
+* Entire college
+* Department only
+* Specific communities
+
+---
+
+## 3. Anonymous Confessions
+
+Students can:
+
+* Create anonymous posts
+* View anonymous feed
+* Upvote
+* Downvote
+* Comment anonymously
+
+Requirements:
+
+* No public identity
+* No username exposure
+* Random aliases
+
+Examples:
+
+* Anonymous Panda
+* Anonymous Fox
+* Anonymous Axolotl
+* Anonymous Owl
+
+---
+
+## 4. Anonymous Discussions
+
+Thread-based system:
+
+* Create topic
+* Join discussions
+* Vote comments
+* Nested replies
+
+Similar to:
+
+* Reddit
+* Blind
+* Yik Yak
+
+---
+
+## 5. Blind Chat Roulette
+
+Anonymous matching system.
+
+Users enter queue.
+
+System randomly matches:
+
+User A ↔ User B
+
+Features:
+
+* Text chat
+* Leave anytime
+* Report user
+* Rematch button
+
+Messages automatically expire after 24 hours.
+
+No chat history retained permanently.
+
+---
+
+## 6. Communities
+
+Students can:
+
+* Join groups
+* Create clubs
+* Department channels
+* Project collaboration spaces
+
+Examples:
+
+* Computer Engineering
+* Mechanical Engineering
+* Coding Club
+* Placement Preparation
+
+---
+
+## 7. Events
+
+Create:
+
+* College events
+* Workshops
+* Hackathons
+* Competitions
+
+Features:
+
+* RSVP
+* Reminders
+* Calendar integration
+
+---
+
+# Security Architecture
+
+Anonymous system must be completely isolated.
+
+## Anonymous Identity Layer
+
+Never connect:
+
+Anonymous Post → User ID
+
+directly.
+
+Instead:
+
+User
+→ Anonymous Session Token
+→ Anonymous Alias
+→ Anonymous Activity
+
+Use rotating mappings.
+
+Database leaks must not reveal identities.
+
+---
+
+# Moderation System
+
+## AI Moderation
+
+Before database write:
+
+Scan for:
+
+* Hate speech
+* Harassment
+* Threats
+* Doxxing attempts
+* Phone numbers
+* Social media handles
+* Personal information
+
+Reject or quarantine flagged content.
+
+---
+
+## Community Moderation
+
+Users can:
+
+* Report posts
+* Report comments
+* Report chats
+
+Rule:
+
+If flags ≥ 5
+
+Automatically:
+
+status = hidden
+
+Pending review.
+
+---
+
+## Shadow Ban System
+
+Moderators can:
+
+* Shadowban anonymous accounts
+* Prevent feed visibility
+* Prevent chat matching
+
+User should not be notified.
+
+---
+
+# Recommended Technology Stack
+
+## Mobile
+
+React Native
+
+Language:
+
+TypeScript
+
+State Management:
+
+Redux Toolkit
+
+Additional:
+
+* React Query
+* React Navigation
+* Expo Notifications
+
+---
+
+## Backend
+
+Node.js
+
+Framework:
+
+Fastify
+
+Architecture:
+
+* Modular Monolith
+* Service-Oriented Design
+
+---
+
+## Database
+
+PostgreSQL
+
+Caching:
+
+Redis
+
+Storage:
+
+AWS S3
+
+---
+
+## Real-Time Layer
+
+Socket.io
+
+Used for:
+
+* Live chat
+* Notifications
+* Matchmaking
+* Presence
+
+---
+
+# PostgreSQL Database Schema
+
+Generate complete schema for:
+
+### Users
+
+* id
+* email
+* full_name
+* major
+* graduation_year
+* profile_picture
+* created_at
+
+### Communities
+
+### CommunityMembers
+
+### Posts
+
+### Comments
+
+### Likes
+
+### Events
+
+### EventRSVPs
+
+### DirectMessages
+
+### AnonymousSessions
+
+### AnonymousPosts
+
+### AnonymousComments
+
+### AnonymousVotes
+
+### Reports
+
+### ModerationActions
+
+### Notifications
+
+Include:
+
+* Primary keys
+* Foreign keys
+* Indexes
+* Constraints
+* Soft delete support
+
+---
+
+# Redis Design
+
+Use Redis for:
+
+* Active Socket Connections
+* Blind Chat Queue
+* Presence Tracking
+* Rate Limiting
+* Temporary Chat Messages
+* Notification Cache
+
+Generate Redis key structure.
+
+---
+
+# API Design
+
+Generate REST API structure for:
+
+Authentication
+
+* Register
+* Verify Email
+* Login
+* Refresh Token
+
+Profiles
+
+Communities
+
+Events
+
+Posts
+
+Comments
+
+Anonymous Feed
+
+Anonymous Comments
+
+Blind Chat
+
+Reports
+
+Moderation
+
+Notifications
+
+Include:
+
+* Routes
+* Request examples
+* Response examples
+
+---
+
+# Socket.io Design
+
+Generate event architecture.
+
+Events:
+
+* user_online
+* user_offline
+* join_queue
+* leave_queue
+* match_found
+* send_message
+* receive_message
+* typing
+* report_chat
+* disconnect
+
+Provide matching algorithm.
+
+---
+
+# Backend Security Implementation
+
+Provide TypeScript middleware showing:
+
+1. Authentication
+2. Rate Limiting
+3. Anonymous Identity Stripping
+4. Content Moderation
+5. Shadow Ban Checks
+
+Before storing anonymous content.
+
+---
+
+# Mobile App Screens
+
+Generate wireframe structure for:
+
+Authentication
+
+* Splash
+* Login
+* Verification
+
+Main App
+
+* Home Feed
+* Communities
+* Events
+* Messages
+* Profile
+
+Anonymous Section
+
+* Confessions
+* Discussions
+* Blind Chat
+
+Settings
+
+* Privacy
+* Notifications
+* Account
+
+---
+
+# Scalability Requirements
+
+Design for:
+
+* 50,000+ users
+* 10,000 concurrent users
+* Horizontal scaling
+* CDN support
+* WebSocket clustering
+* Redis pub/sub
+* Database replication
+
+---
+
+# Deliverables
+
+Provide:
+
+1. Complete system architecture diagram.
+2. PostgreSQL schema.
+3. Redis structure.
+4. REST API specification.
+5. Socket.io architecture.
+6. TypeScript backend examples.
+7. Mobile application folder structure.
+8. Security model.
+9. Moderation workflow.
+10. Deployment architecture using Docker and AWS.
+11. Future scaling roadmap.
+12. Production-ready implementation plan.
+
+Generate the solution as if it will be deployed to real college campuses and used by thousands of students.
