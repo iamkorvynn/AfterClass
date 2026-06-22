@@ -97,9 +97,9 @@ class _AuthScreenState extends State<AuthScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF150A21),
-              Color(0xFF0F0F1A),
-              Color(0xFF0C142B),
+              Color(0xFF150D2A), // Deep sunset-purple dark tint
+              Color(0xFF0B1020), // Deep navy
+              Color(0xFF070B16), // Ultra deep navy
             ],
           ),
         ),
@@ -117,9 +117,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       width: 90,
                       height: 90,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF7C3AED).withOpacity(0.15),
+                        color: const Color(0xFF7C5CFF).withOpacity(0.15),
                         shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFF7C3AED), width: 1.5),
+                        border: Border.all(color: const Color(0xFF7C5CFF), width: 1.5),
                       ),
                       child: ClipOval(
                         child: Image.asset(
@@ -158,13 +158,20 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const SizedBox(height: 36),
 
-                  // Card Box
+                  // Card Box (Frosted Glassmorphism)
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF16162A).withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFF262642)),
+                      color: const Color(0xFF161C30).withOpacity(0.55),
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(color: const Color(0xFF2E3B68).withOpacity(0.35), width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -174,7 +181,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                             decoration: BoxDecoration(
                               color: const Color(0xFFEF4444).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(12),
                               border: Border.all(color: const Color(0xFFEF4444).withOpacity(0.3)),
                             ),
                             child: Text(
@@ -206,15 +213,15 @@ class _AuthScreenState extends State<AuthScreen> {
                             hintText: isOtpStep ? 'Enter 6-digit code' : 'username@college.edu',
                             hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
                             filled: true,
-                            fillColor: const Color(0xFF0F0F1A),
+                            fillColor: const Color(0xFF070B16),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF262642)),
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(color: const Color(0xFF2E3B68).withOpacity(0.35)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF7C3AED)),
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(color: Color(0xFF7C5CFF)),
                             ),
                           ),
                         ),
@@ -226,11 +233,11 @@ class _AuthScreenState extends State<AuthScreen> {
                               ? null
                               : () => isOtpStep ? _submitCode(auth) : _submitEmail(auth),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF7C3AED),
+                            backgroundColor: const Color(0xFF7C5CFF),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             elevation: 0,
                           ),

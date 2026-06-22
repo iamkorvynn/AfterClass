@@ -33,13 +33,13 @@ class AfterClassApp extends StatelessWidget {
       themeMode: ThemeMode.dark, // Default to Dark mode for premium styling
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF0F0F1A), // Sleek midnight color
-        cardColor: const Color(0xFF16162A), // Premium card tint
-        dividerColor: const Color(0xFF262642),
+        scaffoldBackgroundColor: const Color(0xFF0B1020), // Deep navy background
+        cardColor: const Color(0xFF161C30), // Frosted card base
+        dividerColor: const Color(0xFF2E3B68).withOpacity(0.35),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF7C3AED), // Premium deep violet
-          secondary: Color(0xFFEC4899), // Neon pink accents
-          surface: Color(0xFF16162A),
+          primary: Color(0xFF7C5CFF), // Purple accent
+          secondary: Color(0xFFFF5E9A), // Soft pink highlights
+          surface: Color(0xFF161C30),
           error: Color(0xFFEF4444),
         ),
         textTheme: GoogleFonts.interTextTheme(

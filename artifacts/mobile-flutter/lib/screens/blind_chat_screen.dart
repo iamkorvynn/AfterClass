@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../services/socket_service.dart';
+import '../services/theme_service.dart';
 import '../state/auth_state.dart';
 
 class BlindChatScreen extends StatefulWidget {
@@ -29,19 +30,40 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
     }
   }
 
+  String _getPartnerAlias(String? roomId) {
+    if (roomId == null) return 'Anonymous Stranger';
+    final index = roomId.hashCode.abs() % 6;
+    switch (index) {
+      case 0:
+        return 'Anonymous Fox 🦊';
+      case 1:
+        return 'Anonymous Owl 🦉';
+      case 2:
+        return 'Anonymous Panda 🐼';
+      case 3:
+        return 'Anonymous Wolf 🐺';
+      case 4:
+        return 'Anonymous Axolotl 🦎';
+      default:
+        return 'Anonymous Raven 🐦';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthState>(context, listen: false);
     final socket = Provider.of<SocketService>(context);
     final isWin = socket.state == ChatState.connected;
+    final partnerAlias = _getPartnerAlias(socket.messages.isNotEmpty ? socket.messages.first.id : null);
 
     return Scaffold(
+      backgroundColor: AfterClassTheme.background,
       appBar: AppBar(
         title: Text(
-          isWin ? 'Anonymous Stranger' : 'Blind Chat Roulette',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          isWin ? partnerAlias : 'Blind Match',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        backgroundColor: const Color(0xFF16162A),
+        backgroundColor: const Color(0xFF0F1326),
         elevation: 0,
         actions: isWin
             ? [
@@ -53,7 +75,7 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
             : null,
       ),
       body: Container(
-        color: const Color(0xFF0F0F1A),
+        color: AfterClassTheme.background,
         child: _buildBody(context, auth, socket),
       ),
     );
@@ -73,6 +95,8 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
   }
 
   Widget _buildIdleView(BuildContext context, AuthState auth, SocketService socket) {
+    final accentColor = AfterClassTheme.accentColor;
+
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
@@ -85,38 +109,53 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFA855F7).withOpacity(0.15),
+                  color: accentColor.withOpacity(0.12),
                   shape: BoxShape.circle,
+                  border: Border.all(color: accentColor.withOpacity(0.3), width: 1.5),
                 ),
-                child: const Icon(Icons.shuffle, size: 52, color: Color(0xFFA855F7)),
+                child: Icon(Icons.shuffle, size: 52, color: accentColor),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
             const Text(
-              'Blind Chat Roulette',
+              'Blind Match',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, letterSpacing: -0.5),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             const Text(
-              'Get matched with a random verified student from your campus. No names. No profiles. Just conversation.',
+              'Get matched with a random verified student from your campus. No names. No profiles. Just raw conversation.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, height: 1.4),
+              style: TextStyle(color: Colors.white60, height: 1.4, fontSize: 14.5),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 36),
             
-            // Rules
-            _buildRuleRow('Completely anonymous'),
-            _buildRuleRow('Messages expire in 24 hours'),
-            _buildRuleRow('Leave anytime, no pressure'),
+            // Rules box
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161C30).withOpacity(0.55),
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFF2E3B68).withOpacity(0.35), width: 1.5),
+              ),
+              child: Column(
+                children: [
+                  _buildRuleRow('Completely anonymous'),
+                  const SizedBox(height: 12),
+                  _buildRuleRow('Messages expire in 24 hours'),
+                  const SizedBox(height: 12),
+                  _buildRuleRow('Leave anytime, no pressure'),
+                ],
+              ),
+            ),
             const SizedBox(height: 36),
 
             ElevatedButton(
               onPressed: () => socket.startMatching(auth.user?.id ?? ''),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA855F7),
+                backgroundColor: accentColor,
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               child: const Text('Find a Match', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
             ),
@@ -127,39 +166,80 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
   }
 
   Widget _buildRuleRow(String rule) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Color(0xFFA855F7), size: 18),
-          const SizedBox(width: 8),
-          Text(rule, style: const TextStyle(fontSize: 14, color: Colors.white70)),
-        ],
-      ),
+    final accentColor = AfterClassTheme.accentColor;
+    return Row(
+      children: [
+        Icon(Icons.check_circle_outline, color: accentColor, size: 20),
+        const SizedBox(width: 12),
+        Expanded(child: Text(rule, style: const TextStyle(fontSize: 14, color: Colors.white70))),
+      ],
     );
   }
 
   Widget _buildSearchingView(BuildContext context, SocketService socket) {
+    final highlightColor = AfterClassTheme.highlightColor;
+
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(color: Color(0xFFA855F7)),
-          const SizedBox(height: 24),
-          const Text('Finding your match...', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          const Text('Searching among verified campus students', style: TextStyle(color: Colors.white70)),
-          const SizedBox(height: 32),
-          TextButton(
-            onPressed: () => socket.disconnect(),
-            child: const Text('Cancel Search', style: TextStyle(color: Colors.white38)),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '🎭 Blind Match',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              'Searching...',
+              style: TextStyle(fontSize: 18, color: Colors.white70, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 20),
+            
+            // Pulsing dot animations or simple indicators
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildSearchingDot(highlightColor),
+                _buildSearchingDot(highlightColor.withOpacity(0.5)),
+                _buildSearchingDot(highlightColor.withOpacity(0.2)),
+              ],
+            ),
+            
+            const SizedBox(height: 32),
+            const Text(
+              'Finding another student...',
+              style: TextStyle(color: Colors.white38, fontSize: 14),
+            ),
+            const SizedBox(height: 48),
+            
+            OutlinedButton(
+              onPressed: () => socket.disconnect(),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.white24),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              child: const Text('Cancel Search', style: TextStyle(color: Colors.white60)),
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  Widget _buildSearchingDot(Color color) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      width: 12,
+      height: 12,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }
+
   Widget _buildDisconnectedView(BuildContext context, SocketService socket) {
+    final accentColor = AfterClassTheme.accentColor;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -173,15 +253,15 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
             const Text(
               'This conversation has ended. All messages will expire automatically.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, height: 1.4),
+              style: TextStyle(color: Colors.white60, height: 1.4),
             ),
             const SizedBox(height: 36),
             ElevatedButton(
               onPressed: () => socket.rematch(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA855F7),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor: accentColor,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               child: const Text('Find New Match', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
             ),
@@ -192,20 +272,34 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
   }
 
   Widget _buildChatView(BuildContext context, AuthState auth, SocketService socket) {
+    final accentColor = AfterClassTheme.accentColor;
+
     return Column(
       children: [
-        // Sub-header
+        // Sub-header displaying partner name and online status
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          color: const Color(0xFF16162A),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0F1326),
+            border: Border(
+              bottom: BorderSide(
+                color: const Color(0xFF2E3B68).withOpacity(0.25),
+                width: 1.5,
+              ),
+            ),
+          ),
           child: Row(
             children: [
-              Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(color: Color(0xFF10B981), shape: BoxShape.circle),
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  socket.isPartnerTyping ? 'Typing...' : 'Connected · Verified Student',
-                  style: const TextStyle(fontSize: 12, color: Colors.green),
+                  socket.isPartnerTyping ? 'Typing...' : 'Online',
+                  style: const TextStyle(fontSize: 13, color: Color(0xFF10B981), fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -215,7 +309,7 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
         // Message list
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             reverse: true,
             itemCount: socket.messages.length,
             itemBuilder: (context, index) {
@@ -224,14 +318,16 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
                 alignment: msg.isMine ? Alignment.centerRight : Alignment.centerLeft,
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: msg.isMine ? const Color(0xFFA855F7) : const Color(0xFF16162A),
-                    borderRadius: BorderRadius.circular(16).copyWith(
-                      bottomRight: msg.isMine ? const Radius.circular(0) : const Radius.circular(16),
-                      topLeft: !msg.isMine ? const Radius.circular(0) : const Radius.circular(16),
+                    color: msg.isMine ? accentColor : const Color(0xFF161C30).withOpacity(0.55),
+                    borderRadius: BorderRadius.circular(20).copyWith(
+                      bottomRight: msg.isMine ? const Radius.circular(0) : const Radius.circular(20),
+                      topLeft: !msg.isMine ? const Radius.circular(0) : const Radius.circular(20),
                     ),
-                    border: msg.isMine ? null : Border.all(color: const Color(0xFF262642)),
+                    border: msg.isMine
+                        ? null
+                        : Border.all(color: const Color(0xFF2E3B68).withOpacity(0.35), width: 1.5),
                   ),
                   constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.76),
                   child: Column(
@@ -256,10 +352,15 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
         
         // Input bar
         Container(
-          padding: const EdgeInsets.all(12),
-          decoration: const BoxDecoration(
-            color: Color(0xFF16162A),
-            border: Border(top: BorderSide(color: Color(0xFF262642))),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0F1326),
+            border: Border(
+              top: BorderSide(
+                color: const Color(0xFF2E3B68).withOpacity(0.25),
+                width: 1.5,
+              ),
+            ),
           ),
           child: Row(
             children: [
@@ -269,18 +370,25 @@ class _BlindChatScreenState extends State<BlindChatScreen> {
                   onChanged: (val) => socket.sendTypingStatus(val.trim().isNotEmpty),
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Type a message...',
+                    hintText: 'Type Message...',
                     hintStyle: const TextStyle(color: Colors.white24),
                     filled: true,
-                    fillColor: const Color(0xFF0F0F1A),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(22), borderSide: BorderSide.none),
+                    fillColor: const Color(0xFF070B16),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(22),
+                      borderSide: BorderSide(color: const Color(0xFF2E3B68).withOpacity(0.15)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(22),
+                      borderSide: BorderSide(color: accentColor.withOpacity(0.5)),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               IconButton(
-                icon: const Icon(Icons.send, color: Color(0xFFA855F7)),
+                icon: Icon(Icons.send, color: accentColor),
                 onPressed: () => _sendMessage(socket),
               ),
             ],
