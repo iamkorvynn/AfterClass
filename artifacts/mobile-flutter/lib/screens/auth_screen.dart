@@ -114,17 +114,18 @@ class _AuthScreenState extends State<AuthScreen> {
                   // Logo / Icon
                   Center(
                     child: Container(
-                      width: 80,
-                      height: 80,
+                      width: 90,
+                      height: 90,
                       decoration: BoxDecoration(
                         color: const Color(0xFF7C3AED).withOpacity(0.15),
                         shape: BoxShape.circle,
                         border: Border.all(color: const Color(0xFF7C3AED), width: 1.5),
                       ),
-                      child: const Icon(
-                        Icons.bolt,
-                        size: 42,
-                        color: Color(0xFF7C3AED),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/logo.jpg',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -132,7 +133,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   
                   // App Title
                   const Text(
-                    'CampusPulse',
+                    'AfterClass',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 32,

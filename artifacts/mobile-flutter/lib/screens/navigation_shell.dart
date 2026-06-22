@@ -141,7 +141,7 @@ class VerifiedFeedTab extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('CampusPulse', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text('AfterClass', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             Text(auth.user?.campusDomain ?? 'University Network', style: const TextStyle(fontSize: 12, color: Colors.white70)),
           ],
         ),

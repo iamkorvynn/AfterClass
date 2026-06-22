@@ -16,7 +16,7 @@ class ApiClient {
   // the server (e.g. on Render/Railway), paste the HTTPS URL here:
   // Example: 'https://campuspulse-api.localtunnel.me'
   // ---------------------------------------------------------------------------
-  static const String remoteUrl = 'https://totals-tennis-opinion-apps.trycloudflare.com/api';
+  static const String remoteUrl = 'https://campuspulse-api-production.up.railway.app/api';
 
   String get baseUrl {
     if (_customBaseUrl != null) return _customBaseUrl!;

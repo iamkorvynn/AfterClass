@@ -17,18 +17,18 @@ void main() {
         ChangeNotifierProvider(create: (_) => AppState()),
         ChangeNotifierProvider(create: (_) => SocketService()),
       ],
-      child: const CampusPulseApp(),
+      child: const AfterClassApp(),
     ),
   );
 }
 
-class CampusPulseApp extends StatelessWidget {
-  const CampusPulseApp({super.key});
+class AfterClassApp extends StatelessWidget {
+  const AfterClassApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CampusPulse',
+      title: 'AfterClass',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark, // Default to Dark mode for premium styling
       darkTheme: ThemeData(
