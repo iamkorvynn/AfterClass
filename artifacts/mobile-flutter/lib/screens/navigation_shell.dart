@@ -206,6 +206,7 @@ class VerifiedFeedTab extends StatelessWidget {
     return Scaffold(
       backgroundColor: AfterClassTheme.background,
       floatingActionButton: FloatingActionButton(
+        heroTag: 'feed_fab',
         onPressed: () => _showCreatePostDialog(context, state),
         backgroundColor: accentColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
@@ -810,6 +811,7 @@ class ConfessionsTab extends StatelessWidget {
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'confessions_fab',
         onPressed: () => _showCreateConfessionDialog(context, state),
         backgroundColor: highlightColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
